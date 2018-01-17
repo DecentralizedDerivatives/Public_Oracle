@@ -12,6 +12,7 @@ contract Oracle is usingOraclize{
 
   //Mapping of documents stored in the oracle
   mapping(uint => uint) public oracle_values;
+  mapping(uint => bool) public queried;
 
   /*Events*/
   event DocumentStored(uint _key, uint _value);
@@ -26,12 +27,13 @@ contract Oracle is usingOraclize{
  //CAlls 
   function PushData() public {
     uint _key = now - (now % 86400);
-    require(oracle_values[_key] < 1);
+    require(queried[_key] == false);
     if (oraclize_getPrice("URL") > this.balance) {
             newOraclizeQuery("Oraclize query was NOT sent, please add some ETH to cover for the query fee");
         } else {
             newOraclizeQuery("Oraclize queries sent");
             queryID = oraclize_query("URL", "json(https://api.gdax.com/products/BTC-USD/ticker).price");
+            qureied[_key] == true;
         }
   }
 
@@ -46,5 +48,9 @@ contract Oracle is usingOraclize{
 
 
   function fund() public payable {}
+
+  function getQuery(uint _date) public view returns(bool _isValue){
+    return queried[_date];
+  }
 
 }
