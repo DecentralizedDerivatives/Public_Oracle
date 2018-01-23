@@ -30,3 +30,7 @@ Any further calls in the day will fail.
 To query the data, users can call the retrieve data function with the corresponding datestamp (key)
 
         RetrieveData(key);
+        
+Sometimes the contract calls will fail if the contract is not funded enough to pay Oraclize for returning the value.  The contract can be funded by sending money to the contract via the fund function.
+
+        fund();
