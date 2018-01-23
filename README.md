@@ -8,7 +8,7 @@ The contract can be tested easily using the Oraclize Remix IDE.
 http://dapps.oraclize.it/browser-solidity
 
 
-## DAPP Oracle
+### DAPP Oracle
 
 The DRCT contracts live on the DApp at http://drct.decentralizedderivatives.org uses this public oracle contract referencing the GDAX BTC/USD API at https://api.gdax.com/products/BTC-USD/ticker
 
