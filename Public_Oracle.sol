@@ -19,12 +19,18 @@ contract Oracle is usingOraclize{
   event newOraclizeQuery(string description);
 
   /*Functions*/
+  /*
+  RetrieveData - Returns stored value by given key
+  @param "_date": Daily unix timestamp of key storing value (GMT 00:00:00)
+  */
   function RetrieveData(uint _date) public constant returns (uint data) {
     uint value = oracle_values[_date];
     return value;
   }
 
- //CAlls 
+   /*
+  PushData - Sends an Oraclize query for entered API
+  */
   function PushData() public {
     uint _key = now - (now % 86400);
     require(queried[_key] == false);
@@ -33,11 +39,15 @@ contract Oracle is usingOraclize{
         } else {
             newOraclizeQuery("Oraclize queries sent");
             queryID = oraclize_query("URL", "json(https://api.gdax.com/products/BTC-USD/ticker).price");
-            qureied[_key] == true;
+            queried[_key] = true;
         }
   }
 
-
+  /*
+  _callback - used by Oraclize to return value of PushData API call
+  @param "_oraclizeID": unique oraclize identifier of call
+  @param "_result": Result of API call in string format
+  */
   function __callback(bytes32 _oraclizeID, string _result) {
       require(msg.sender == oraclize_cbAddress() && _oraclizeID == queryID);
       uint _value = parseInt(_result,3);
@@ -46,11 +56,16 @@ contract Oracle is usingOraclize{
       DocumentStored(_key, _value);
     }
 
-
+  /*
+  fund - Allows the contract to be funded in order to pay for oraclize calls
+  */
   function fund() public payable {}
 
+  /*
+  getQuery - Returns true or false based upon whether an API query has been initialized (or completed) for given date
+  @param "_date": Daily unix timestamp of key storing value (GMT 00:00:00)
+  */
   function getQuery(uint _date) public view returns(bool _isValue){
     return queried[_date];
   }
-
 }
